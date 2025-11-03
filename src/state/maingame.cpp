@@ -1,7 +1,25 @@
 #include "maingame.h"
+#include "coin.h"
 
 void UpdateCollisions(Entity* entityA, Entity* entityB) {
-    std::cout << "Collisions!" << std::endl;
+    Player* player = dynamic_cast<Player*>(entityA);
+    Coin* coin = dynamic_cast<Coin*>(entityB);
+
+    if (!player) {
+        player = dynamic_cast<Player*>(entityB);
+        coin = dynamic_cast<Coin*>(entityA);
+    }
+
+    if (player && coin && coin->Active()) {
+        std::cout << "Player picked up a coin!" << std::endl;
+        coin->SetActive(0);
+
+        // Increment global counter
+        MainGame* mainGame = dynamic_cast<MainGame*>(gameState.state);
+        if (mainGame) {
+            mainGame->IncrementCoinCount();
+        }
+    }
 }
 
 void MainGame::Initialize(sf::RenderWindow* window) {
@@ -26,6 +44,13 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     // Load Player
     this->player = new Player(this->entityManager, this->map, this->camera, 100, 100);
     this->entityManager->AddEntity("Player", this->player);
+
+    // Load Coins
+    this->entityManager->AddEntity("Coin", new Coin(140, 100));
+    this->entityManager->AddEntity("Coin", new Coin(200, 150));
+    this->entityManager->AddEntity("Coin", new Coin(300, 200));
+    this->entityManager->AddEntity("Coin", new Coin(450, 250));
+    this->entityManager->AddEntity("Coin", new Coin(600, 300));
 }
 
 void MainGame::Update(sf::RenderWindow* window) {
@@ -60,4 +85,9 @@ void MainGame::Destroy(sf::RenderWindow* window) {
     delete this->entityManager;
     delete this->map;
     delete this->camera;
+}
+
+void MainGame::IncrementCoinCount() {
+    coinCount++;
+    std::cout << "Coins collected: " << coinCount << std::endl;
 }

@@ -18,6 +18,8 @@ public:
     void Render(sf::RenderWindow* window);
     void Destroy(sf::RenderWindow* window);
 
+    void IncrementCoinCount();
+
 private:
     sf::Clock clock;
     sf::Time time;
@@ -26,6 +28,15 @@ private:
     Map* map;
     Camera* camera;
     Player* player;
+
+    sf::Clock clock;
+    sf::Time time;
+    EntityManager* entityManager;
+    Map* map;
+    Camera* camera;
+    Player* player;
+
+    int coinCount = 0;
 };
 
 #endif // MAINGAME_H
