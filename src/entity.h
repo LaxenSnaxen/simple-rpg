@@ -8,7 +8,7 @@ class Entity : public sf::Sprite
 {
 public:
     Entity();
-    Entity(std::string fileName);
+    Entity(std::string fileName, int movementState = 0);
     Entity(std::string fileName, sf::IntRect rect);
     void Load(std::string fileName);
     void Load(std::string fileName, sf::IntRect rect);
@@ -22,7 +22,7 @@ public:
     sf::Vector2f velocity;
 
 protected:
-    int active, groupId;
+    int active, groupId, movementState;
 
 private:
     sf::Texture* texture;
