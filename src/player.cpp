@@ -14,6 +14,8 @@ Player::Player(EntityManager* entityManager, Map *map, Camera *camera, float x, 
 
 bool isResting = false;
 float restTimer = 5.0f;
+float sprintMultiplier = 1.0f;
+
 
 void Player::Update(sf::RenderWindow* window, InputManager inputManager, int timeElapsed) {
     float speed = this->speed * timeElapsed;
@@ -21,29 +23,37 @@ void Player::Update(sf::RenderWindow* window, InputManager inputManager, int tim
     // Original speed is multiplied with 3 while sprinting 
     // Player loses 1 stamina per second while sprinting
     // Player regains 1 stamina per second while not sprinting
-    float sprintMultiplier;
-
-
-    if(inputManager.IsPressed(InputManager::SprintAbility) && stamina > 0.0f && isResting == false){
-        sprintMultiplier = 3.0f;
-        stamina -= 1.0f/60.0f;
-    } else if(inputManager.IsPressed(InputManager::SprintAbility) && stamina <= 0.0f && isResting == false){
-        sprintMultiplier = 1.0f;
-        isResting = true;
-    } else if(isResting == true){
-        restTimer = restTimer - 1.0f;
+    float deltaSeconds = timeElapsed / 1000.0f;
+    float sprintMultiplier = 1.0f;
+    
+    if(isResting == true){
+        // Decrease rest timer in seconds
+        restTimer -= 1.0f/60.0f;
         if(restTimer <= 0.0f){
             isResting = false;
             stamina = maxStamina;
             restTimer = 5.0f;
-        };
-    } else{
-        sprintMultiplier = 1.0f;
+        }
+
+    } else if(inputManager.IsPressed(InputManager::SprintAbility) && stamina > 0.0f && isResting == false){
+        sprintMultiplier = 3.0f;
+        // Drain stamina per second using actual frame time
+        stamina -= 1.0f/60.0f;
+        
+        if(stamina <= 0.0f){
+            // Start forced rest when stamina depletes
+            stamina = 0.0f;
+            isResting = true;
+            restTimer = 5.0f;
+            sprintMultiplier = 1.0f;
+        }
+    } else {
+        // Regenerate stamina while not sprinting and not resting
+        stamina += 1.0f/60.0f;
+        if(stamina > maxStamina){
+            stamina = maxStamina;
+        }
     }
-    // If statement so stamina doesn't surpass max stamina
-    if(stamina > maxStamina){
-        stamina = maxStamina;
-    };
 
     speed = speed * sprintMultiplier;
     // Update player velocity
