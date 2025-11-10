@@ -11,6 +11,7 @@ class Layer
 {
 public:
     Layer(int width = 0, int height = 0) : width(width), height(height), x(0), y(0), visible(true)
+    
     {
         data.resize(height);
         for(int i = 0; i < height; i++) {

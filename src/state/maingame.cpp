@@ -34,7 +34,11 @@ void MainGame::Update(sf::RenderWindow* window) {
 
     this->player->Update(window, inputManager, timeElapsed);
     this->entityManager->Update();
-    this->map->CheckCollision(this->player);
+    // Check collisions
+    // Turn off collision when Flight ability is active
+    if(!inputManager.IsPressed(InputManager::FlightAbility)) {
+        this->map->CheckCollision(this->player);
+    }
     this->camera->Update(window, this->map, sf::Vector2f(this->player->getPosition().x, this->player->getPosition().y));
 
     // Reloading of the map

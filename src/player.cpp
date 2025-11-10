@@ -7,11 +7,13 @@ Player::Player(EntityManager* entityManager, Map *map, Camera *camera, float x, 
 
     this->Load("data/gfx/player.png");
     this->setPosition(x, y);
-    this->speed = 0.00015f;;
+    this->speed = 0.00015f;
+    // Stamina initialization
     this->maxStamina = 3.0f;
     stamina = maxStamina;
 }
 
+// Variables for sprinting and stamina system
 bool isResting = false;
 float restTimer = 5.0f;
 float sprintMultiplier = 1.0f;
@@ -24,6 +26,11 @@ void Player::Update(sf::RenderWindow* window, InputManager inputManager, int tim
     // Player loses 1 stamina per second while sprinting
     // Player regains 1 stamina per second while not sprinting
     // When player depletes stamina, they must rest for 5 seconds
+
+    // Flight ability
+    // Player can also use stamina to fly
+    // Flight is slower but you can move over trees and other things
+
     float sprintMultiplier = 1.0f;
     
     if(isResting == true){
@@ -38,6 +45,18 @@ void Player::Update(sf::RenderWindow* window, InputManager inputManager, int tim
     } else if(inputManager.IsPressed(InputManager::SprintAbility) && stamina > 0.0f && isResting == false){
         sprintMultiplier = 3.0f;
         // Drain stamina per second using actual frame time
+        stamina -= 1.0f/60.0f;
+        
+        if(stamina <= 0.0f){
+            // Start forced rest when stamina depletes
+            stamina = 0.0f;
+            isResting = true;
+            restTimer = 5.0f;
+            sprintMultiplier = 1.0f;
+        }
+    } else if(inputManager.IsPressed(InputManager::FlightAbility) && stamina > 0.0f && isResting == false){
+        sprintMultiplier = 2.0f;
+
         stamina -= 1.0f/60.0f;
         
         if(stamina <= 0.0f){

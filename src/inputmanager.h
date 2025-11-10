@@ -18,6 +18,7 @@ public:
         Down,
         LoadMap,
         SprintAbility,
+        FlightAbility,
 
         KeyCount      ///< Keep last -- the total number of inputs
     };

@@ -14,6 +14,7 @@ sf::Keyboard::Key InputManager::KeyboardConfiguration(Input key) {
 //    Up,
 //    Down,
 //    SprintAbility,
+//    FlightAbility,
 
     if(key == Left) return sf::Keyboard::A;
     if(key == Right) return sf::Keyboard::D;
@@ -21,6 +22,7 @@ sf::Keyboard::Key InputManager::KeyboardConfiguration(Input key) {
     if(key == Down) return sf::Keyboard::S;
     if(key == LoadMap) return sf::Keyboard::L;
     if(key == SprintAbility) return sf::Keyboard::LShift;
+    if(key == FlightAbility) return sf::Keyboard::F;
 
 
     return sf::Keyboard::Unknown;
