@@ -1,5 +1,6 @@
 #include "maingame.h"
 #include "coin.h"
+#include <SFML/Graphics.hpp>
 
 void UpdateCollisions(Entity* entityA, Entity* entityB) {
     Player* player = dynamic_cast<Player*>(entityA);
@@ -14,7 +15,6 @@ void UpdateCollisions(Entity* entityA, Entity* entityB) {
         std::cout << "Player picked up a coin!" << std::endl;
         coin->SetActive(0);
 
-        // Increment global counter
         MainGame* mainGame = dynamic_cast<MainGame*>(gameState.GetState());
         if (mainGame) {
             mainGame->IncrementCoinCount();
@@ -26,27 +26,20 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager = new EntityManager();
     this->entityManager->SetCollisionMethod(UpdateCollisions);
 
-    // Add entities
-    this->entityManager->AddEntity("test", new Entity("data/gfx/test.png", 1));
-    this->entityManager->AddEntity("test", new Entity("data/gfx/test.png", 1));
-    //this->entityManager->Get("test")->velocity.x = 0.5;
-    //this->entityManager->Get("test0")->velocity.x = 0.5;
-    this->entityManager->Get("test")->setPosition(sf::Vector2f(50, 50));
-    this->entityManager->Get("test0")->setPosition(sf::Vector2f(50, 300));
+    if (!this->font.loadFromFile("../src/arial.ttf")) {
+        std::cerr << "Error loading font" << std::endl;
+        return;
+    }
 
-    // Load Map
     this->map = new Map();
     MapLoad(this->map, "data/map/level1.json");
     this->entityManager->SetMap(this->map);
 
-    // Load Camera
     this->camera = new Camera(window);
 
-    // Load Player
     this->player = new Player(this->entityManager, this->map, this->camera, 100, 100);
     this->entityManager->AddEntity("Player", this->player);
 
-    // Load Coins
     this->entityManager->AddEntity("Coin", new Coin(140, 100));
     this->entityManager->AddEntity("Coin", new Coin(200, 150));
     this->entityManager->AddEntity("Coin", new Coin(300, 200));
@@ -64,23 +57,26 @@ void MainGame::Update(sf::RenderWindow* window) {
     this->map->CheckCollision(this->player);
 
     this->camera->Update(window, this->map, sf::Vector2f(this->player->getPosition().x, this->player->getPosition().y));
-
-    // Reloading of the map
-    if(inputManager.IsPressed(InputManager::LoadMap)
-    && inputManager.IsKeyBoardPressed(sf::Keyboard::LControl)) {
-        std::cout << "Loading Map..." << std::endl;
-        MapLoad(this->map, "data/map/level1.json", 0);
-    }
-    else if(inputManager.IsPressed(InputManager::LoadMap)) {
-        std::cout << "Updating Map..." << std::endl;
-        MapLoad(this->map, "data/map/level1.json", 1);
-    }
 }
 
 void MainGame::Render(sf::RenderWindow* window) {
     this->map->RenderGround(window);
     this->entityManager->Render(window, this->camera);
     this->map->RenderAbove(window);
+
+    sf::Vector2f viewCenter = this->camera->GetView().getCenter();
+    sf::Vector2f viewSize = this->camera->GetView().getSize();
+
+    sf::Vector2f topLeft(viewCenter.x - viewSize.x / 2, viewCenter.y - viewSize.y / 2);
+
+    sf::Text text;
+    text.setFont(this->font);
+    text.setString("Coins: " + std::to_string(this->coinCount));
+    text.setCharacterSize(50);
+    text.setFillColor(sf::Color::White);
+    text.setPosition(topLeft.x + 10.f, topLeft.y + 10.f);
+
+    window->draw(text);
 }
 
 void MainGame::Destroy(sf::RenderWindow* window) {

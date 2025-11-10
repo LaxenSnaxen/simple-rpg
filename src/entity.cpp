@@ -56,7 +56,7 @@ void Entity::Update() {
         // Roaming beahviour, randomised movement.
         this->velocity.x += (rand() % 3 - 1) * 0.1;
         this->velocity.y += (rand() % 3 - 1) * 0.1;
-        std::cout << "Velocity: " << this->velocity.x << ", " << this->velocity.y << std::endl;
+        //std::cout << "Velocity: " << this->velocity.x << ", " << this->velocity.y << std::endl;
         this->move(this->velocity);
     }
     else{
