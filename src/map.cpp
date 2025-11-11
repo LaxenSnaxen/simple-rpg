@@ -163,11 +163,16 @@ void Map::Render(sf::RenderWindow *window, Layer *layer) {
     for (int y = renderHeight.x; y < renderHeight.y; y++) {
         for (int x = renderWidth.x; x < renderWidth.y; x++) {
             index = layer->data[y][x];
-            if(index != 0) {
+            if(index != 0 && index <= this->tileSet->tile.size() ) {
                 tile.setTexture(*this->tileSet->tile[index]);
                 tile.setPosition(sf::Vector2f(x * this->tileSet->tileWidth, y * this->tileSet->tileHeight));
-                window->draw(tile);
+            if(y > -1 &&  y < layer->data.size()) {
+                if(x > -1 &&  x < layer->data.size()){
+                    window->draw(tile);
+                }
             }
+            }
+            
         }
     }
 }

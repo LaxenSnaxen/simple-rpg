@@ -1,7 +1,7 @@
 #include "camera.h"
 
 Camera::Camera(sf::RenderWindow *window) {
-    this->view = sf::View(sf::FloatRect(0, 0, 1280, 720));
+    this->view = sf::View(sf::FloatRect(0, 0, 1920, 1080));
     window->setView(view);
 }
 
