@@ -71,29 +71,36 @@ void Map::CheckCollision(Entity *entity) {
     // Move back if entity collided
     if(collided) {
         // Get Entities center x, y position;
-        sf::Vector2f entityCenter = sf::Vector2f(
+        sf::Vector2i entityCenter = sf::Vector2i(
             (int)((entity->getPosition().x + entity->getGlobalBounds().width / 2) / this->tileSet->tileWidth),
             (int)((entity->getPosition().y + entity->getGlobalBounds().height / 2) / this->tileSet->tileHeight)
         );
 
+        /*
+
         // DOWN_RIGHT
         if(collidedTile.x > entityCenter.x + 1
         && collidedTile.y > entityCenter.y + 1) {
-
+            entity->velocity.x -= entity->velocity.x * 2;
+            entity->velocity.y += entity->velocity.y * 2;
         }
         // UP_RIGHT
         else if(collidedTile.x > entityCenter.x + 1
         && collidedTile.y < entityCenter.y - 1) {
-
+            entity->velocity.x -= entity->velocity.x * 2;
+            entity->velocity.y -= entity->velocity.y * 2;
         }
         // UP_LEFT
         else if(collidedTile.x < entityCenter.x - 1
         && collidedTile.y < entityCenter.y - 1) {
-
+            entity->velocity.x += entity->velocity.x * 2;
+            entity->velocity.y -= entity->velocity.y * 2;
         }
         // DOWN_LEFT
         else if(collidedTile.x < entityCenter.x - 1
         && collidedTile.y > entityCenter.y + 1) {
+            entity->velocity.x += entity->velocity.x * 2;
+            entity->velocity.y += entity->velocity.y * 2;
         }
 
         // RIGHT
@@ -104,18 +111,47 @@ void Map::CheckCollision(Entity *entity) {
         // LEFT
         if(collidedTile.x < entityCenter.x
         && collidedTile.y == entityCenter.y) {
-
+            entity->velocity.x += entity->velocity.x * 2;
         }
         // DOWN
         if(collidedTile.x == entityCenter.x
         && collidedTile.y > entityCenter.y) {
-
+            entity->velocity.y += entity->velocity.y * 2;
         }
         // UP
         if(collidedTile.x == entityCenter.x
         && collidedTile.y < entityCenter.y) {
             entity->velocity.y -= entity->velocity.y * 2;
         }
+        */
+
+        // TODO: make sure collision really works, like print something when you collide
+        // UP
+        if (collidedTile.y + 1 == entityCenter.y) {
+            entity->velocity.y -= entity->velocity.y * 2;
+            std::cout << "UP!!" << std::endl;
+        }
+        
+        if (collidedTile.y - 1 ==  entityCenter.y) {
+            entity->velocity.y -= entity->velocity.y * 2;
+            std::cout << "DOWN!!" << std::endl;
+        }
+        
+        if (collidedTile.x + 1 == entityCenter.x) {
+            entity->velocity.x -= entity->velocity.x * 2;
+            std::cout << "RIGHT!!" << std::endl;
+        }
+        
+        if (collidedTile.x - 1 == entityCenter.x) {
+            entity->velocity.x -= entity->velocity.x * 2;
+            std::cout << "LEFT!!" << std::endl;
+        }
+
+        std::cout << "Tile X: " << collidedTile.x << " : Player X: " << entityCenter.x << std::endl;
+        std::cout << "Tile Y: " << collidedTile.y << " : Player Y: " << entityCenter.y << std::endl;
+        std::cout << "----------------------------------" << std::endl;
+
+
 
         entity->move(entity->velocity.x, entity->velocity.y);
     }
@@ -162,12 +198,20 @@ void Map::Render(sf::RenderWindow *window, Layer *layer) {
     sf::Sprite tile;
     for (int y = renderHeight.x; y < renderHeight.y; y++) {
         for (int x = renderWidth.x; x < renderWidth.y; x++) {
+
+            if(y > -1 &&  y < layer->data.size()) {
+                if(x > -1 &&  x < layer->data.size()){
             index = layer->data[y][x];
-            if(index != 0) {
+            
+            if(index != 0 && index <= this->tileSet->tile.size() ) {
                 tile.setTexture(*this->tileSet->tile[index]);
                 tile.setPosition(sf::Vector2f(x * this->tileSet->tileWidth, y * this->tileSet->tileHeight));
-                window->draw(tile);
+            
+                    window->draw(tile);
+                }
             }
+            }
+            
         }
     }
 }

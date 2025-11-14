@@ -1,7 +1,7 @@
 #include "camera.h"
 
 Camera::Camera(sf::RenderWindow *window) {
-    this->view = sf::View(sf::FloatRect(0, 0, 1280, 720));
+    this->view = sf::View(sf::FloatRect(0, 0, 1920, 1080));
     window->setView(view);
 }
 
@@ -36,15 +36,13 @@ void Camera::Update(sf::RenderWindow *window, Map *map, sf::Vector2f position) {
                                                 map->height * map->tileHeight - windowCenterStart.y);
 
     // If Player is in the center (4)
-    if(position.x > windowCenterStart.x
-    && position.y > windowCenterStart.y
-    && position.x < windowCenterEnd.x
-    && position.y < windowCenterEnd.y) {
+     
         this->SetCenter(window, sf::Vector2f(position.x, position.y));
-    }
+    
 
     // If Player is in the edge (2,3)
     // Middle Top
+    /*
     else if(position.x > windowCenterStart.x
     && position.x < windowCenterEnd.x
     && position.y < windowCenterStart.y) {
@@ -90,6 +88,7 @@ void Camera::Update(sf::RenderWindow *window, Map *map, sf::Vector2f position) {
     && position.y > windowCenterEnd.y) {
         this->SetCenter(window, sf::Vector2f(windowCenterEnd.x, windowCenterEnd.y));
     }
+    */
 }
 
 bool Camera::IsOnScreen(sf::RenderWindow *window, Entity *entity) {
