@@ -21,6 +21,14 @@ public:
     // Stamina methods
     int SetStamina();
     int GetStamina();
+    void SetMaxStamina(float maxStamina);
+    float GetMaxStamina();
+    bool GetIsResting();
+    void SetIsResting(bool isResting);
+    float GetRestTimer();
+    void SetRestTimer(float restTimer);
+    float GetSprintMultiplier();
+    void SetSprintMultiplier(float sprintMultiplier);
     
     ~Player();
 
@@ -35,6 +43,10 @@ private:
     // Stamina attribute
     float stamina;
     float maxStamina;
+    bool isResting;
+    float restTimer;
+    float sprintMultiplier;
+
     //float direction;
 };
 

@@ -12,12 +12,11 @@ Player::Player(EntityManager* entityManager, Map *map, Camera *camera, float x, 
     // Stamina initialization
     this->maxStamina = 3.0f;
     stamina = maxStamina;
-}
+    isResting = false;
+    restTimer = 5.0f;
+    sprintMultiplier = 1.0f;
 
-// Variables for sprinting and stamina system
-bool isResting = false;
-float restTimer = 5.0f;
-float sprintMultiplier = 1.0f;
+}
 
 
 void Player::Update(sf::RenderWindow* window, InputManager inputManager, int timeElapsed) {
