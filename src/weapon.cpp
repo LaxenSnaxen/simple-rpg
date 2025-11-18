@@ -7,6 +7,9 @@ Weapon::Weapon(EntityManager* entityManager, Map *map, Camera *camera, float x, 
 
     this->Load("data/gfx/OSTHYVEL.png");
     this->setPosition(x, y);
+    this->setScale(-2.5, 2);
+    this->setRotation(90);
+    this->setOrigin(35, 0);
     this->speed = 0.00015f;
     this->damage = 10;
 }
@@ -25,6 +28,16 @@ void Weapon::Update(sf::RenderWindow* window, InputManager inputManager, int tim
         this->velocity.x *= .75;
         this->velocity.y *= .75;
     }
+
+    if(this->velocity.x > 0) {
+        this->setScale(-2.5, 2);
+        this->setRotation(-270);
+        this->setOrigin(35, 0);
+    } else if(this->velocity.x < 0) {
+        this->setScale(2.5, 2);
+        this->setRotation(270);
+        this->setOrigin(35, 70);
+    };
 }
 
 int Weapon::GetDamage() {
