@@ -28,6 +28,10 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     // Load Player
     this->player = new Player(this->entityManager, this->map, this->camera, 100, 100);
     this->entityManager->AddEntity("Player", this->player);
+
+    // Load Weapon
+    this->weapon = new Weapon(this->entityManager, this->map, this->camera, 120, 90);
+    this->entityManager->AddEntity("Weapon", this->weapon);
 }
 
 void MainGame::Update(sf::RenderWindow* window) {
@@ -36,9 +40,12 @@ void MainGame::Update(sf::RenderWindow* window) {
     this->clock.restart();
 
     this->player->Update(window, inputManager, timeElapsed);
+    this->weapon->Update(window, inputManager, timeElapsed);
     this->entityManager->Update();
     this->map->CheckCollision(this->player);
+    this->map->CheckCollision(this->weapon);
     this->camera->Update(window, this->map, sf::Vector2f(this->player->getPosition().x, this->player->getPosition().y));
+    this->camera->Update(window, this->map, sf::Vector2f(this->weapon->getPosition().x, this->weapon->getPosition().y));
 
     // Reloading of the map
     if(inputManager.IsPressed(InputManager::LoadMap)
