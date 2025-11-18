@@ -9,9 +9,9 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager->SetCollisionMethod(UpdateCollisions);
 
     // Add entities
-    this->entityManager->AddEntity("test", new Entity("data/gfx/test.png"));
-    this->entityManager->AddEntity("test0", new Entity("data/gfx/test.png"));
-    this->entityManager->AddEntity("test1", new Entity("data/gfx/test.png"));
+    this->entityManager->AddEntity("test", new Entity("data/gfx/cheese.png"));
+    this->entityManager->AddEntity("test0", new Entity("data/gfx/cheese.png"));
+    this->entityManager->AddEntity("test1", new Entity("data/gfx/cheese.png"));
     this->entityManager->Get("test0")->velocity.x = 0.5;
     this->entityManager->Get("test")->setPosition(sf::Vector2f(50, 500));
     this->entityManager->Get("test0")->setPosition(sf::Vector2f(50, 300));
