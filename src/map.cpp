@@ -53,13 +53,19 @@ void Map::CheckCollision(Entity *entity) {
                 sf::Vector2f pos = entity->getPosition();
                 if (pos.x < 0) pos.x = 0;
                 if (pos.y < 0) pos.y = 0;
-                if (pos.x + entity->getGlobalBounds().width >
-                    this->tileSet->tileWidth * this->collision->data[0].size())
-                    pos.x = this->tileSet->tileWidth * this->collision->data[0].size() - entity->getGlobalBounds().width;
-                if (pos.y + entity->getGlobalBounds().height >
-                    this->tileSet->tileHeight * this->collision->data.size())
-                    pos.y = this->tileSet->tileHeight * this->collision->data.size() - entity->getGlobalBounds().height;
-
+                if (this->collision->data.empty() == false)
+                {
+                    if (pos.x + entity->getGlobalBounds().width >
+                        this->tileSet->tileWidth * this->collision->data[0].size())
+                        pos.x = this->tileSet->tileWidth * this->collision->data[0].size() - entity->getGlobalBounds().width;
+                    if (pos.y + entity->getGlobalBounds().height >
+                        this->tileSet->tileHeight * this->collision->data.size())
+                        pos.y = this->tileSet->tileHeight * this->collision->data.size() - entity->getGlobalBounds().height;
+                }
+                else
+                {
+                    std::cout << "Collision data is empty!" << std::endl;
+                }
                 entity->setPosition(pos);
                 return; // Stop checking, outer wall hit
             }

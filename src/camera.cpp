@@ -20,6 +20,8 @@ void Camera::Update(sf::RenderWindow *window, Map *map, sf::Vector2f position) {
     sf::Vector2f windowCenterEnd = sf::Vector2f(map->width * map->tileWidth - windowCenterStart.x,
                                                 map->height * map->tileHeight - windowCenterStart.y);
 
+
+// If player is in the centre.
     if (position.x > windowCenterStart.x && position.y > windowCenterStart.y &&
         position.x < windowCenterEnd.x && position.y < windowCenterEnd.y) {
         this->SetCenter(window, sf::Vector2f(position.x, position.y));
