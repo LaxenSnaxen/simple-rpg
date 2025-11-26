@@ -49,15 +49,23 @@ void MainGame::Initialize(sf::RenderWindow* window) {
         L"Om man tänker på det \nså är månen gul precis som ost", 
         L"Jag hörde att du inte tycker om färgen blå, \när det på grund av blåmögelost?"};
     
+    // Add NPCs
     Entity *ptr0 = new Entity("data/gfx/test.png", 1);
     ptr0->setDialogue(dialogue_options);
     Entity *ptr = new Entity("data/gfx/test.png", 1);
     ptr->setDialogue(dialogue_options);
-    // Add entities
+
+    ptr0->setPosition(200, 300);
+    ptr->setPosition(300, 400);
+
+    this->entityManager->AddEntity("npc1", ptr0);
+    this->entityManager->AddEntity("npc2", ptr);
+
+    // Add cheeses
     this->entityManager->AddEntity("test", new Entity("data/gfx/cheese.png", 0));
     this->entityManager->AddEntity("test0", new Entity("data/gfx/cheese.png", 0));
     this->entityManager->AddEntity("test1", new Entity("data/gfx/cheese.png", 0));
-    this->entityManager->Get("test0")->velocity.x = 0.5;
+    this->entityManager->Get("test")->velocity.x = 0.5;
     this->entityManager->Get("test")->setPosition(sf::Vector2f(50, 500));
     this->entityManager->Get("test0")->setPosition(sf::Vector2f(50, 300));
     this->entityManager->Get("test1")->velocity.x = 1.0f;
