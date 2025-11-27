@@ -1,9 +1,9 @@
 #include "map.h"
 
 void TileSet::Clear() {
-    while (this->tile.size() > 0) {
-        delete this->tile[this->tile.size() - 1];
-        this->tile.pop_back();
+    while (this->textures.size() > 0) {
+        delete this->textures[this->textures.size() - 1];
+        this->textures.pop_back();
     }
 }
 
@@ -73,7 +73,9 @@ void Map::CheckCollision(Entity *entity) {
             index = this->collision->data[y][x];
             // If collision tile
             if(index >= 0 && index < tileSet->tile.size()) {
-                tile.setTexture(*this->tileSet->tile[index]);
+                TileGraphic tg = this->tileSet->tile[index];
+                tile.setTexture(*this->tileSet->textures[tg.tileset]);
+                tile.setTextureRect(tg.rect);
                 tile.setPosition(sf::Vector2f(x * this->tileSet->tileWidth, y * this->tileSet->tileHeight));
                 if (tile.getGlobalBounds().intersects(entity->getGlobalBounds())) {
                     collided = true;
@@ -219,7 +221,9 @@ void Map::Render(sf::RenderWindow *window, Layer *layer) {
             index = layer->data[y][x];
             
             if(index != 0 && index <= this->tileSet->tile.size() ) {
-                tile.setTexture(*this->tileSet->tile[index]);
+                TileGraphic tg = this->tileSet->tile[index];
+                tile.setTexture(*this->tileSet->textures[tg.tileset]);
+                tile.setTextureRect(tg.rect);
                 tile.setPosition(sf::Vector2f(x * this->tileSet->tileWidth, y * this->tileSet->tileHeight));
             
                     window->draw(tile);

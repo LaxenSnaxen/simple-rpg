@@ -33,6 +33,11 @@ public:
     int y;
 };
 
+struct TileGraphic {
+    int tileset;
+    sf::IntRect rect;
+};
+
 class TileSet
 {
 public:
@@ -56,7 +61,8 @@ public:
 //            "transparentcolor":"#ffffff"
     // @Todo save all tile textures with pointers
     // map->tileSet.tile[1];
-    std::vector<sf::Texture*> tile;
+    std::vector<sf::Texture *> textures;
+    std::vector<TileGraphic> tile;
 };
 
 class Map

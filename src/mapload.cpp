@@ -113,8 +113,7 @@ void MapLoad::LoadTileSet(const rapidjson::Document& document, Map *map) {
     int width;
 
     // Add NULL texture to fill position '0'
-    sf::Texture* texture = new sf::Texture();
-    map->tileSet->tile.push_back(texture);
+    map->tileSet->tile.push_back(TileGraphic{ 0, sf::IntRect{ 0, 0, 0, 0 } });
 
     int loopCount = document["tilesets"].Size();
     for(int i = 0; i < loopCount; i++) {
@@ -128,14 +127,17 @@ void MapLoad::LoadTileSet(const rapidjson::Document& document, Map *map) {
         sf::Image tileSheet;
         tileSheet.loadFromFile(tileSheetLocation);
         tileSheet.createMaskFromColor(sf::Color::White);
+        sf::Texture* texture = new sf::Texture();
+        texture->loadFromImage(tileSheet);
+        map->tileSet->textures.push_back(texture);
+        
         for(int y = 0; y < height; y++) {
             for(int x = 0; x < width; x++) {
-                sf::Texture* texture = new sf::Texture();
-                texture->loadFromImage(tileSheet, sf::IntRect(x * document["tilesets"][i]["tilewidth"].GetInt(),
+                sf::IntRect tileRect = sf::IntRect{x * document["tilesets"][i]["tilewidth"].GetInt(),
                                                               y * document["tilesets"][i]["tileheight"].GetInt(),
                                                               document["tilesets"][i]["tilewidth"].GetInt(),
-                                                              document["tilesets"][i]["tileheight"].GetInt()));
-                map->tileSet->tile.push_back(texture);
+                                                              document["tilesets"][i]["tileheight"].GetInt()};
+                map->tileSet->tile.push_back(TileGraphic{i, tileRect});
             }
         }
     }
