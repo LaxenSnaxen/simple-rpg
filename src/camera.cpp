@@ -1,7 +1,9 @@
 #include "camera.h"
 
 Camera::Camera(sf::RenderWindow *window) {
-    this->view = sf::View(sf::FloatRect(0, 0, 1280, 720));
+    
+    this->view = sf::View(sf::FloatRect(0, 0, sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height));
+    this->view.zoom(0.8);
     window->setView(view);
 }
 
@@ -11,7 +13,9 @@ void Camera::MoveCamera(sf::RenderWindow *window, sf::Vector2f move) {
 }
 
 void Camera::SetCenter(sf::RenderWindow *window, sf::Vector2f position) {
+    
     this->view.setCenter(position.x, position.y);
+    
     window->setView(view);
 }
 
@@ -20,6 +24,21 @@ void Camera::Update(sf::RenderWindow *window, Map *map, sf::Vector2f position) {
     sf::Vector2f windowCenterEnd = sf::Vector2f(map->width * map->tileWidth - windowCenterStart.x,
                                                 map->height * map->tileHeight - windowCenterStart.y);
 
+  // If map is smaller than window
+    if(map->width * map->tileWidth < window->getSize().x
+         && map->height * map->tileHeight < window->getSize().y) {
+        this->SetCenter(window, sf::Vector2f(map->width * map->tileWidth / 2, map->height * map->tileHeight / 2));
+    } else {
+    // If Player is in the center (4)
+       this->SetCenter(window, sf::Vector2f(position.x, position.y));
+    }
+
+    // If Player is in the edge (2,3)
+    // Middle Top
+    /*
+    else if(position.x > windowCenterStart.x
+    && position.x < windowCenterEnd.x
+    && position.y < windowCenterStart.y) {
 
 // If player is in the centre.
     if (position.x > windowCenterStart.x && position.y > windowCenterStart.y &&
@@ -50,7 +69,10 @@ void Camera::Update(sf::RenderWindow *window, Map *map, sf::Vector2f position) {
     else if (position.x > windowCenterEnd.x && position.y > windowCenterEnd.y) {
         this->SetCenter(window, sf::Vector2f(windowCenterEnd.x, windowCenterEnd.y));
     }
+    */
+    
 }
+
 
 bool Camera::IsOnScreen(sf::RenderWindow *window, Entity *entity) {
     if (entity->getPosition().x + entity->getGlobalBounds().width / 2 > this->view.getCenter().x - window->getSize().x / 2 &&

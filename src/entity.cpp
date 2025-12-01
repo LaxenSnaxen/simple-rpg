@@ -1,34 +1,31 @@
 #include "entity.h"
+#include "graphicsmanager.h"
+#include <random>
+#include <vector>
+#include <cmath>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 Entity::Entity() {
     this->active = 1;
-    this->texture = new sf::Texture();
+    this->texture = GraphicsManager::get_instance()->get_empty_texture();
+    this->isPlayer = false;
+    this->status = false;
 }
 
 Entity::Entity(std::string fileName, int movementState) {
+    this->isPlayer = false;
+    this->status = false;
     this->active = 1;
-    this->texture = new sf::Texture;
+    this->texture = GraphicsManager::get_instance()->get_empty_texture();
     this->Load(fileName);
     this->setOrigin((this->texture->getSize().x / 2), (this->texture->getSize().y / 2));
     this->movementState = movementState;
 }
 
-Entity::Entity(std::string fileName, sf::IntRect rect) {
-    this->active = 1;
-    this->texture = new sf::Texture();
-    this->Load(fileName, rect);
-    this->setOrigin((this->texture->getSize().x / 2), (this->texture->getSize().y / 2));
-}
-
 void Entity::Load(std::string fileName) {
-    this->texture->loadFromFile(fileName, sf::IntRect());
-    this->setTexture(*this->texture);
-}
-
-void Entity::Load(std::string fileName, sf::IntRect rect) {
-    this->texture->loadFromFile(fileName, rect);
-    this->setTexture(*this->texture);
+    sf::Texture *texture = GraphicsManager::get_instance()->get_texture(fileName);
+    this->setTexture(*texture);
 }
 
 bool Entity::Collision(Entity *entity) {
@@ -41,6 +38,15 @@ bool Entity::Collision(Entity *entity) {
 
 void Entity::SetActive(int active) {
     this->active = active;
+}
+
+void Entity::setDialogue(std::vector<std::wstring> dialogue_options) {
+    this->dialogue_options = dialogue_options;
+}
+
+float Entity::calculateLength(Entity* entity) {
+    float length = sqrt(pow(this->getPosition().x  - entity->getPosition().x,2) + pow(this->getPosition().y - entity->getPosition().y, 2));
+    return length;
 }
 
 int Entity::Active() {
@@ -63,7 +69,34 @@ void Entity::Update() {
         this->move(this->velocity);
     }
 }
+//för att allmänt ändra textur.//
+void Entity::UpdateTexture(std::string filePath){
+    this->Load(filePath);
+}
 
 Entity::~Entity() {
-    delete this->texture;
+    if(this->texture) {
+        delete this->texture;
+
+        // several entities might have the same texture pointer
+        // set to null so that textures are freed only once
+        this->texture = nullptr;
+    }
+}
+
+// Will output a random dialogue from the dialogue_options vector
+std::wstring Entity::Dialogue() {
+    if(this->dialogue_options.size() == 0) {
+        return L"";
+    }
+    
+    if (!hasSpoken) {
+        std::mt19937 eng(time(0));
+        std::uniform_int_distribution<int> number(0, this->dialogue_options.size());
+        int random_number = number(eng);
+        dialogue_option = dialogue_options[random_number];
+
+        hasSpoken = true;
+    }
+    return dialogue_option;
 }

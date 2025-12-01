@@ -11,12 +11,13 @@ MapLoad::MapLoad(Map *map, std::string mapName, int update) {
         this->LoadTileSet(document, map);
     }
     this->LoadMap(document, map);
-
-//    for (int i = 0; i < 100; i++) {
-//        for (int j = 0; j < 100; j++) {
-//            std::cout << map->collision->data[i][j] << std::endl;
-//        }
-//    }
+/*
+   for (int i = 0; i < 100; i++) {
+       for (int j = 0; j < 100; j++) {
+           std::cout << map->collision->data[i][j] << std::endl;
+      }
+  }
+*/
 }
 
 void MapLoad::GetFile(std::string *content, std::string mapName) {
@@ -49,25 +50,25 @@ void MapLoad::LoadLayer(const rapidjson::Document& document, Map *map) {
     Layer* current;
     for(int i = 0; i < loopCount; i++) {
         current = NULL;
-        if(document["layers"][i]["properties"]["name"] == "Ground1") {
+        if(document["layers"][i]["name"] == "Ground1") {
             current = map->ground1;
         }
-        else if(document["layers"][i]["properties"]["name"] == "Ground2") {
+        else if(document["layers"][i]["name"] == "Ground2") {
             current = map->ground2;
         }
-        else if(document["layers"][i]["properties"]["name"] == "Ground3") {
+        else if(document["layers"][i]["name"] == "Ground3") {
             current = map->ground3;
         }
-        else if(document["layers"][i]["properties"]["name"] == "Above1") {
+        else if(document["layers"][i]["name"] == "Above1") {
             current = map->above1;
         }
-        else if(document["layers"][i]["properties"]["name"] == "Above2") {
+        else if(document["layers"][i]["name"] == "Above2") {
             current = map->above2;
         }
-        else if(document["layers"][i]["properties"]["name"] == "Above3") {
+        else if(document["layers"][i]["name"] == "Above3") {
             current = map->above3;
         }
-        if(document["layers"][i]["properties"]["name"] == "Collision") {
+        if(document["layers"][i]["name"] == "Collision") {
             current = map->collision;
         }
 
@@ -112,8 +113,7 @@ void MapLoad::LoadTileSet(const rapidjson::Document& document, Map *map) {
     int width;
 
     // Add NULL texture to fill position '0'
-    sf::Texture* texture = new sf::Texture();
-    map->tileSet->tile.push_back(texture);
+    map->tileSet->tile.push_back(TileGraphic{ 0, sf::IntRect{ 0, 0, 0, 0 } });
 
     int loopCount = document["tilesets"].Size();
     for(int i = 0; i < loopCount; i++) {
@@ -127,14 +127,17 @@ void MapLoad::LoadTileSet(const rapidjson::Document& document, Map *map) {
         sf::Image tileSheet;
         tileSheet.loadFromFile(tileSheetLocation);
         tileSheet.createMaskFromColor(sf::Color::White);
+        sf::Texture* texture = new sf::Texture();
+        texture->loadFromImage(tileSheet);
+        map->tileSet->textures.push_back(texture);
+        
         for(int y = 0; y < height; y++) {
             for(int x = 0; x < width; x++) {
-                sf::Texture* texture = new sf::Texture();
-                texture->loadFromImage(tileSheet, sf::IntRect(x * document["tilesets"][i]["tilewidth"].GetInt(),
+                sf::IntRect tileRect = sf::IntRect{x * document["tilesets"][i]["tilewidth"].GetInt(),
                                                               y * document["tilesets"][i]["tileheight"].GetInt(),
                                                               document["tilesets"][i]["tilewidth"].GetInt(),
-                                                              document["tilesets"][i]["tileheight"].GetInt()));
-                map->tileSet->tile.push_back(texture);
+                                                              document["tilesets"][i]["tileheight"].GetInt()};
+                map->tileSet->tile.push_back(TileGraphic{i, tileRect});
             }
         }
     }

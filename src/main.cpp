@@ -9,12 +9,12 @@ int main()
 {
     std::cout << "Hello World!" << std::endl;
 
-    std::string gameName = "rpg";
+    std::string gameName = "Simple RPG";
     unsigned int windowStyle = sf::Style::Titlebar | sf::Style::Close;
     sf::ContextSettings settings;
     settings.antialiasingLevel = 16;
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), gameName, windowStyle, settings);
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), gameName, windowStyle, settings);
     window.clear(sf::Color(0, 0, 0));
     window.display();
     //window.setVerticalSyncEnabled(true);
@@ -36,7 +36,19 @@ int main()
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
             }
-
+            /*
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::P) {
+                    for (int i = 0; i < 100; i++) {
+                        for (int j = 0; j < 100; j++) {
+                            std::cout << map->collision->data[i][j] << std::endl;
+                        }
+                    }
+                }
+                }
+            }
+            */
+            // Fullscreen crashes the game
             // Enter fullscreen mode : key combination : Alt+Enter
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Return) {
@@ -46,9 +58,14 @@ int main()
                         }
                         else {
                             windowStyle = sf::Style::Fullscreen;
+                            
+                            
+                            
                         }
 
-                        window.create(sf::VideoMode(1280, 720), gameName, windowStyle, settings);
+                        
+
+                        window.create(sf::VideoMode::getDesktopMode(), gameName, windowStyle, settings);
                         window.setVerticalSyncEnabled(true);
                     }
                 }

@@ -20,6 +20,7 @@ public:
     void Render(sf::RenderWindow *window, Camera *camera);
     void SetMap(Map* map);
     ~EntityManager();
+    void CaptureEntity(Entity &prisoner);
 
 private:
     std::unordered_map<std::string, Entity*> entities;
