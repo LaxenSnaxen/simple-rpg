@@ -10,19 +10,32 @@
 class Layer
 {
 public:
-    //Layer();
+    Layer(int width = 0, int height = 0) : width(width), height(height), x(0), y(0), visible(true)
+    
+    {
+        data.resize(height);
+        for(int i = 0; i < height; i++) {
+            data[i].resize(width);
+        }
+    }
+    ;
     //~Layer();
 
     std::vector<std::vector<int>> data;
-    int height;
 //    name
 //    opacity
 //    properties
 //    type
     bool visible;
     int width;
+    int height;
     int x;
     int y;
+};
+
+struct TileGraphic {
+    int tileset;
+    sf::IntRect rect;
 };
 
 class TileSet
@@ -48,7 +61,8 @@ public:
 //            "transparentcolor":"#ffffff"
     // @Todo save all tile textures with pointers
     // map->tileSet.tile[1];
-    std::vector<sf::Texture*> tile;
+    std::vector<sf::Texture *> textures;
+    std::vector<TileGraphic> tile;
 };
 
 class Map
