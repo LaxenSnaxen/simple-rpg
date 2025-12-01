@@ -1,7 +1,6 @@
 #include "maingame.h"
 #include "entity.h"
 
-#include "coin.h"
 #include <SFML/Graphics.hpp>
 
 void UpdateCollisions(Entity* entityA, Entity* entityB) {
