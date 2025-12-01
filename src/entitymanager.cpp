@@ -18,6 +18,14 @@ void EntityManager::SetMap(Map* map) {
     this->map = map; // Set the Map instance
 }
 
+void EntityManager::SetFont(sf::Font* font) {
+    this->font = font;
+}
+
+sf::Font* EntityManager::GetFont() {
+    return this->font;
+}
+
 void EntityManager::AddEntity(std::string name, Entity* entity) {
     std::unordered_map<std::string, Entity*>::const_iterator found = this->entities.find(name);
     while(found != this->entities.end()) {
@@ -81,11 +89,7 @@ void EntityManager::Render(sf::RenderWindow* window, Camera *camera) {
         // Check length to player
         if (iterator.second->calculateLength(Get("Player")) <= 100 && iterator.first != "Player") {
             // Will output a text bubble with the random dialogue option
-            sf::Font font;
-            if (!font.loadFromFile("data/ARIAL.TTF")) {
-                exit(0);
-            }
-            sf::Text dialogue("", font, 20);
+            sf::Text dialogue("test", *this->GetFont(), 20);
             dialogue.setFillColor(sf::Color::Black);
             sf::CircleShape shape(50.f);
             sf::Vector2f ShapePosition(iterator.second->getPosition().x, iterator.second->getPosition().y - 100);

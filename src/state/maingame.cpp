@@ -41,6 +41,12 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager = new EntityManager();
     this->entityManager->SetCollisionMethod(UpdateCollisions);
 
+    sf::Font* font = new sf::Font;
+    if (!font->loadFromFile("data/ARIAL.TTF")) {
+        exit(0);
+    }
+    this->entityManager->SetFont(font);
+
     std::vector<std::wstring> dialogue_options = 
     {L"Så det är du som är Johan Ostman", 
         L"Jag hörde att du fick ett \nosthjul i huvudet under en klar natt.\n Är det därför du tror att månen är gjord av ost?", 
