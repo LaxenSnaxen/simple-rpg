@@ -77,7 +77,7 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager->Get("test0")->setPosition(sf::Vector2f(50, 300));
     this->entityManager->Get("test1")->velocity.x = 1.0f;
     this->entityManager->Get("test1")->setPosition(sf::Vector2f(50, 800));
-    if (!this->font.loadFromFile("../src/arial.ttf")) {
+    if (!this->font.loadFromFile("data/arial.ttf")) {
         std::cerr << "Error loading font" << std::endl;
         return;
     }
