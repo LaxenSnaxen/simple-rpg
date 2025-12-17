@@ -88,7 +88,8 @@ void Player::Update(sf::RenderWindow* window, InputManager inputManager, int tim
     }
 
     if(isResting){
-        this->Load("data/gfx/cheese.png");
+        //vet inte varför vi måste bli en ost när vi vilar, vi blir aldrig en RAT igen :(
+        //this->Load("data/gfx/cheese.png");
     }
     speed = speed * sprintMultiplier;
     // Update player velocity

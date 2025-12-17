@@ -1,11 +1,12 @@
 #include "maingame.h"
 #include "entity.h"
-
-#include "coin.h"
+#include "defs.h"
 #include <SFML/Graphics.hpp>
 
 void UpdateCollisions(Entity* entityA, Entity* entityB) {
-    std::cout << "Collisions!" << std::endl;
+    if(DEBUG_MODE) {
+        std::cout << "Collisions!" << std::endl;
+    }
     if(inputManager.IsKeyBoardPressed(sf::Keyboard::C)) {
         if(entityB->isPlayer != true ) {
             entityB->velocity.x = 0;
@@ -41,6 +42,12 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager = new EntityManager();
     this->entityManager->SetCollisionMethod(UpdateCollisions);
 
+    sf::Font* font = new sf::Font;
+    if (!font->loadFromFile("data/ARIAL.TTF")) {
+        exit(0);
+    }
+    this->entityManager->SetFont(font);
+
     std::vector<std::wstring> dialogue_options = 
     {L"Så det är du som är Johan Ostman", 
         L"Jag hörde att du fick ett \nosthjul i huvudet under en klar natt.\n Är det därför du tror att månen är gjord av ost?", 
@@ -70,7 +77,7 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager->Get("test0")->setPosition(sf::Vector2f(50, 300));
     this->entityManager->Get("test1")->velocity.x = 1.0f;
     this->entityManager->Get("test1")->setPosition(sf::Vector2f(50, 800));
-    if (!this->font.loadFromFile("../src/arial.ttf")) {
+    if (!this->font.loadFromFile("data/arial.ttf")) {
         std::cerr << "Error loading font" << std::endl;
         return;
     }
@@ -148,8 +155,8 @@ void MainGame::Update(sf::RenderWindow* window) {
 
 void MainGame::Render(sf::RenderWindow* window) {
     this->map->RenderGround(window);
-    this->entityManager->Render(window, this->camera);
     this->map->RenderAbove(window);
+    this->entityManager->Render(window, this->camera);
 
     sf::Vector2f viewCenter = this->camera->GetView().getCenter();
     sf::Vector2f viewSize = this->camera->GetView().getSize();

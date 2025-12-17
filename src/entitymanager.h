@@ -21,11 +21,14 @@ public:
     void SetMap(Map* map);
     ~EntityManager();
     void CaptureEntity(Entity &prisoner);
+    void SetFont(sf::Font* font);
+    sf::Font* GetFont();
 
 private:
     std::unordered_map<std::string, Entity*> entities;
     CollisionUpdateEvent* collisionsEvent;
     Map* map;
+    sf::Font* font;
 };
 
 #endif // ENTITYMANAGER

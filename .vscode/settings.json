@@ -1,4 +1,7 @@
 {
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}"
+    },
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",

@@ -18,6 +18,14 @@ void EntityManager::SetMap(Map* map) {
     this->map = map; // Set the Map instance
 }
 
+void EntityManager::SetFont(sf::Font* font) {
+    this->font = font;
+}
+
+sf::Font* EntityManager::GetFont() {
+    return this->font;
+}
+
 void EntityManager::AddEntity(std::string name, Entity* entity) {
     std::unordered_map<std::string, Entity*>::const_iterator found = this->entities.find(name);
     while(found != this->entities.end()) {
@@ -55,6 +63,24 @@ void EntityManager::Update() {
 
             if (iterator.second->Active()) {
                 iterator.second->Update();
+
+                float entityVelX = 0;
+                float entityVelY = 0;
+
+                entityVelX = (iterator.second->velocity.x != 0) ? iterator.second->velocity.x : 0;
+                entityVelY = (iterator.second->velocity.y != 0) ? iterator.second->velocity.y : 0; 
+                // Check length to player
+                if (iterator.second->calculateLength(Get("Player")) <= 100 && iterator.first != "Player") {
+                    iterator.second->isSpeaking = true;
+
+                    iterator.second->velocity.x = 0;
+                    iterator.second->velocity.y = 0;
+                } else {
+                    iterator.second->isSpeaking = false;
+
+                    iterator.second->velocity.x = entityVelX;
+                    iterator.second->velocity.y = entityVelY;
+                }
             }
             else {
                 toRemove.push_back(iterator.first);
@@ -78,14 +104,10 @@ void EntityManager::Render(sf::RenderWindow* window, Camera *camera) {
         && camera->IsOnScreen(window, iterator.second)) {
             window->draw(*iterator.second);
         }
-        // Check length to player
-        if (iterator.second->calculateLength(Get("Player")) <= 100 && iterator.first != "Player") {
+
+        if (iterator.second->isSpeaking) {
             // Will output a text bubble with the random dialogue option
-            sf::Font font;
-            if (!font.loadFromFile("data/ARIAL.TTF")) {
-                exit(0);
-            }
-            sf::Text dialogue("", font, 20);
+            sf::Text dialogue("test", *this->GetFont(), 20);
             dialogue.setFillColor(sf::Color::Black);
             sf::CircleShape shape(50.f);
             sf::Vector2f ShapePosition(iterator.second->getPosition().x, iterator.second->getPosition().y - 100);
@@ -118,12 +140,11 @@ void EntityManager::Render(sf::RenderWindow* window, Camera *camera) {
                         numOfStringTerminator += 5;
                     }
                 }
-                
-                dialogue.setPosition(ShapePosition.x - (10 * (characterSize - (characterSize / 2) )), ShapePosition.y + numOfStringTerminator);
 
+                dialogue.setPosition(ShapePosition.x - (10 * (characterSize - (characterSize / 2) )), ShapePosition.y + numOfStringTerminator);
+            
                 window->draw(dialogue);
             }
-
         }
     }
 }

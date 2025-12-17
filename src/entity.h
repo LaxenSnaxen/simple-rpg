@@ -25,6 +25,7 @@ public:
     
     sf::Vector2f velocity;
     bool hasSpoken = false;
+    bool isSpeaking = false;
     std::wstring dialogue_option;
 
     bool status;
