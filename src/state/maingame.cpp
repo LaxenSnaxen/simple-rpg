@@ -38,6 +38,13 @@ void UpdateCollisions(Entity* entityA, Entity* entityB) {
     }
 }
 
+float RandomFloat(float min, float max) {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dis(min, max);
+    return dis(gen);
+}
+
 void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager = new EntityManager();
     this->entityManager->SetCollisionMethod(UpdateCollisions);
@@ -105,11 +112,13 @@ void MainGame::Initialize(sf::RenderWindow* window) {
     this->entityManager->Get("test")->setPosition(sf::Vector2f(50, 50));
     this->entityManager->Get("test0")->setPosition(sf::Vector2f(50, 300));
 
-    this->entityManager->AddEntity("Coin", new Coin(140, 100));
-    this->entityManager->AddEntity("Coin", new Coin(200, 150));
-    this->entityManager->AddEntity("Coin", new Coin(300, 200));
-    this->entityManager->AddEntity("Coin", new Coin(450, 250));
-    this->entityManager->AddEntity("Coin", new Coin(600, 300));
+const int NumberOfCoins = 5;
+for (int i = 0; i < NumberOfCoins; ++i) {
+    float x = RandomFloat(50.0f, 1500.0f);
+    float y = RandomFloat(100.0f, 800.0f);
+    Coin* coin = new Coin(x, y);
+    this->entityManager->AddEntity("Coin" + std::to_string(i), coin);
+}
 }
 
 void MainGame::Update(sf::RenderWindow* window) {

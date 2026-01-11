@@ -11,6 +11,7 @@
 #include "player.h"
 #include "weapon.h"
 #include "coin.h"
+#include <random>
 
 class MainGame : public GameState
 {
